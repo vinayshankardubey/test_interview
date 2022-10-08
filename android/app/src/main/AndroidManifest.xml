@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.test_interview">
+    package="com.Aisthetic.test">
    <application
         android:label="test_interview"
         android:name="${applicationName}"

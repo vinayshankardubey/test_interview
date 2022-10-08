@@ -38,6 +38,7 @@ dependencies:
   sizer: ^2.0.15
   show_up_animation: ^2.0.0
   animated_text_kit: ^4.2.2
+  google_fonts: ^3.0.1
 
 dev_dependencies:
   flutter_test:

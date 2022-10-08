@@ -3,6 +3,7 @@ import 'dart:ffi';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:test_interview/Widgets/text_animation.dart';
 import 'package:video_player/video_player.dart';
 import 'package:sizer/sizer.dart';
@@ -54,15 +55,15 @@ class MyHomePage extends StatefulWidget {
 
   final String title;
 
-
-
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
+
 late String Heading;
 late String Content;
 
-class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateMixin {
+class _MyHomePageState extends State<MyHomePage>
+    with SingleTickerProviderStateMixin {
   late PageController _pageController;
   late VideoPlayerController _videoPlayerController;
   late Future<void> _initializeVideoPlayerFuture;
@@ -70,40 +71,24 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
   late Animation<Offset> _animOffset;
   late Animation<Offset> _animationSlide;
 
-
   late Animation<double> _animationFade;
   int delayAmount = 50;
 
-
-
-
-
   List<String> HeadingList = [
-    "Welcome One 1",
+    "Always new experiance",
     "Welcome One 2",
     "Welcome One 3",
   ];
 
-
   List<String> ContentList = [
-    "Welcome One 1 content ",
+    "The exhibition was a stunning display of intricate and beautiful jewellery. The pieces on display ranged from simple and delicate designs to more elaborate and opulent pieces. There was something for everyone to admire, and the overall display was truly breathtaking.",
     "Welcome One 2 content ",
     "Welcome One 3 content",
   ];
 
-
-
-
-
-
-
-
-
-
   @override
   void initState() {
     // TODO: implement initState
-
 
     _pageController = PageController(viewportFraction: 0.8);
 
@@ -117,11 +102,10 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
       });
     });
 
-
-    _animController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 1000));
+    _animController = AnimationController(
+        vsync: this, duration: Duration(milliseconds: 1000));
     final curve =
-    CurvedAnimation(curve: Curves.decelerate, parent: _animController);
+        CurvedAnimation(curve: Curves.decelerate, parent: _animController);
     _animOffset =
         Tween<Offset>(begin: const Offset(0.0, 0.35), end: Offset.zero)
             .animate(curve);
@@ -134,27 +118,30 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
       });
     }
 
-
     Heading = HeadingList[0];
     Content = ContentList[0];
-
   }
 
-
   _onPageViewChange(int page) {
-    _animController.reverse().then((value){
+    _animController.reverse().then((value) {
       Heading = HeadingList[page];
       Content = ContentList[page];
-      setState(() {
-
-      });
+      setState(() {});
     }).then((value) {
       _animController.forward();
     });
 
-    setState(() {
-    });
+    setState(() {});
 
+    if (page != 0) {
+      if (_videoPlayerController.value.isPlaying) {
+        _videoPlayerController.pause();
+        setState(() {});
+      }
+    } else {
+      _videoPlayerController.play();
+      setState(() {});
+    }
   }
 
   @override
@@ -163,10 +150,8 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
     _videoPlayerController.dispose();
     _animController.dispose();
 
-
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -176,89 +161,92 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
       "https://images.pexels.com/photos/4550855/pexels-photo-4550855.jpeg"
     ];
 
-
-
-
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(top: 10.0, left: 15.0, bottom: 15.0),
-              child: Text(
-                "Make it personal",
-                style: TextStyle(color: Colors.black, fontSize: 20),
-              ),
-            ),
-            Container(
-              width: 100.w,
-              height: 70.h,
-              child: PageView.builder(
-                  controller: _pageController,
-                  onPageChanged: _onPageViewChange,
-                  itemCount: images.length,
-                  pageSnapping: true,
-                  itemBuilder: (context, index) {
-                    if (index == 0) {
-
-
-                      //Working
-                      return Container(
-                        margin: EdgeInsets.all(10.0),
-                        child: AspectRatio(
-                          aspectRatio: _videoPlayerController.value.aspectRatio,
-                          child: VideoPlayer(_videoPlayerController),
-                        ),
-                      );
-                    } else {
-                      return Container(
-                          margin: EdgeInsets.all(10.0),
-                          child: Image.network(
-                            images[index],
-                            fit: BoxFit.cover,
-                          ));
-                    }
-                  }),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 18.0),
-              child: Container(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-
-                    Padding(
-                      padding: EdgeInsets.only(top: 10.0),
-                      child :  ShowUp(
-                        child: Text(Heading,style: TextStyle(fontSize: 30),),
-                        delay: delayAmount + 200,
-                        animController: _animController,
-                        animOffset: _animOffset,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 10.0),
-                      child :  ShowUp(
-                        animController: _animController,
-                        animOffset: _animOffset,
-                        child: Text(Content,style: TextStyle(fontSize: 20),),
-                        delay: delayAmount + 200,
-                      ),
-                      ),
-
-
-                  ],
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(top: 10.0, left: 15.0, bottom: 15.0),
+                child: Text(
+                  "Choose your style",
+                  style:
+                      GoogleFonts.lato(textStyle: TextStyle(fontSize: 15.sp)),
                 ),
               ),
-            ),
-          ],
+              Container(
+                width: 100.w,
+                height: 70.h,
+                child: PageView.builder(
+                    controller: _pageController,
+                    onPageChanged: _onPageViewChange,
+                    itemCount: images.length,
+                    pageSnapping: true,
+                    itemBuilder: (context, index) {
+                      if (index == 0) {
+                        //Working
+                        return Container(
+                          margin: EdgeInsets.all(10.0),
+                          child: AspectRatio(
+                            aspectRatio:
+                                _videoPlayerController.value.aspectRatio,
+                            child: VideoPlayer(_videoPlayerController),
+                          ),
+                        );
+                      } else {
+                        return Container(
+                            margin: EdgeInsets.all(10.0),
+                            child: Image.network(
+                              images[index],
+                              fit: BoxFit.cover,
+                            ));
+                      }
+                    }),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 18.0),
+                child: ShowUp(
+                  delay: delayAmount + 200,
+                  animController: _animController,
+                  animOffset: _animOffset,
+                  child: Container(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(top: 10.0),
+                          child: Container(
+                            width: 90.w,
+                            child: Text(
+                              Heading,
+                              style: GoogleFonts.lato(
+                                  textStyle: TextStyle(fontSize: 25.sp)),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 15.sp),
+                          child: Container(
+                            width: 80.w,
+                            child: Text(
+                              Content,
+                              style: GoogleFonts.lato(
+                                  textStyle: TextStyle(fontSize: 20)),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
-
-
 }
