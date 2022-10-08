@@ -76,14 +76,14 @@ class _MyHomePageState extends State<MyHomePage>
 
   List<String> HeadingList = [
     "Always new experiance",
-    "Welcome One 2",
-    "Welcome One 3",
+    "Welcome Card 2",
+    "Welcome Card 3",
   ];
 
   List<String> ContentList = [
     "The exhibition was a stunning display of intricate and beautiful jewellery. The pieces on display ranged from simple and delicate designs to more elaborate and opulent pieces. There was something for everyone to admire, and the overall display was truly breathtaking.",
-    "Welcome One 2 content ",
-    "Welcome One 3 content",
+    "Welcome 2 content ",
+    "Welcome 3 content",
   ];
 
   @override
