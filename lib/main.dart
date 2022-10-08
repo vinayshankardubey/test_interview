@@ -1,4 +1,9 @@
+import 'dart:async';
+import 'dart:ffi';
+
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:test_interview/Widgets/text_animation.dart';
 import 'package:video_player/video_player.dart';
 import 'package:sizer/sizer.dart';
 
@@ -49,18 +54,56 @@ class MyHomePage extends StatefulWidget {
 
   final String title;
 
+
+
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
+late String Heading;
+late String Content;
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateMixin {
   late PageController _pageController;
   late VideoPlayerController _videoPlayerController;
   late Future<void> _initializeVideoPlayerFuture;
+  late AnimationController _animController;
+  late Animation<Offset> _animOffset;
+  late Animation<Offset> _animationSlide;
+
+
+  late Animation<double> _animationFade;
+  int delayAmount = 50;
+
+
+
+
+
+  List<String> HeadingList = [
+    "Welcome One 1",
+    "Welcome One 2",
+    "Welcome One 3",
+  ];
+
+
+  List<String> ContentList = [
+    "Welcome One 1 content ",
+    "Welcome One 2 content ",
+    "Welcome One 3 content",
+  ];
+
+
+
+
+
+
+
+
+
 
   @override
   void initState() {
     // TODO: implement initState
+
 
     _pageController = PageController(viewportFraction: 0.8);
 
@@ -74,16 +117,56 @@ class _MyHomePageState extends State<MyHomePage> {
       });
     });
 
-    super.initState();
+
+    _animController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 1000));
+    final curve =
+    CurvedAnimation(curve: Curves.decelerate, parent: _animController);
+    _animOffset =
+        Tween<Offset>(begin: const Offset(0.0, 0.35), end: Offset.zero)
+            .animate(curve);
+
+    if (delayAmount == null) {
+      _animController.forward();
+    } else {
+      Timer(Duration(milliseconds: delayAmount), () {
+        _animController.forward();
+      });
+    }
+
+
+    Heading = HeadingList[0];
+    Content = ContentList[0];
+
+  }
+
+
+  _onPageViewChange(int page) {
+    _animController.reverse().then((value){
+      Heading = HeadingList[page];
+      Content = ContentList[page];
+      setState(() {
+
+      });
+    }).then((value) {
+      _animController.forward();
+    });
+
+    setState(() {
+    });
+
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
     _videoPlayerController.dispose();
+    _animController.dispose();
+
 
     super.dispose();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -93,6 +176,9 @@ class _MyHomePageState extends State<MyHomePage> {
       "https://images.pexels.com/photos/4550855/pexels-photo-4550855.jpeg"
     ];
 
+
+
+
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -100,7 +186,7 @@ class _MyHomePageState extends State<MyHomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.only(top: 10.0,left: 15.0,bottom: 15.0),
+              padding: EdgeInsets.only(top: 10.0, left: 15.0, bottom: 15.0),
               child: Text(
                 "Make it personal",
                 style: TextStyle(color: Colors.black, fontSize: 20),
@@ -111,10 +197,14 @@ class _MyHomePageState extends State<MyHomePage> {
               height: 70.h,
               child: PageView.builder(
                   controller: _pageController,
+                  onPageChanged: _onPageViewChange,
                   itemCount: images.length,
                   pageSnapping: true,
                   itemBuilder: (context, index) {
                     if (index == 0) {
+
+
+                      //Working
                       return Container(
                         margin: EdgeInsets.all(10.0),
                         child: AspectRatio(
@@ -139,16 +229,27 @@ class _MyHomePageState extends State<MyHomePage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+
                     Padding(
-                      padding: const EdgeInsets.only(top:5.0),
-                      child: Text("Make it personal",
-                          style: TextStyle(color: Colors.black, fontSize: 30.sp)),
+                      padding: EdgeInsets.only(top: 10.0),
+                      child :  ShowUp(
+                        child: Text(Heading,style: TextStyle(fontSize: 30),),
+                        delay: delayAmount + 200,
+                        animController: _animController,
+                        animOffset: _animOffset,
+                      ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
-                      child: Text("Make it personal",
-                          style: TextStyle(color: Colors.black, fontSize: 20.sp)),
-                    ),
+                      padding: EdgeInsets.only(top: 10.0),
+                      child :  ShowUp(
+                        animController: _animController,
+                        animOffset: _animOffset,
+                        child: Text(Content,style: TextStyle(fontSize: 20),),
+                        delay: delayAmount + 200,
+                      ),
+                      ),
+
+
                   ],
                 ),
               ),
@@ -158,4 +259,6 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+
+
 }
